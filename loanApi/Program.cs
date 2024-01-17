@@ -1,16 +1,10 @@
 using loanApi.Data;
-using loanApi.Services.AccountInformations;
-using loanApi.Services.CardDetails;
-using loanApi.Services.LoanHistories;
+using loanApi.Services.LoanType;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add DbContext
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-           .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information));
-
+builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();

@@ -6,8 +6,12 @@ namespace loanApi.Data
     public class DataContext : DbContext
 
     {
+        public DataContext() : base()
+        {
+        }
         public DataContext(DbContextOptions <DataContext> options) : base(options){}
 
+       
 
         //Line 10 above for user model
 
@@ -17,10 +21,14 @@ namespace loanApi.Data
         public DbSet<AccountInformation> accountInformations { get; set; }
         //line 16 above for Loan model 
 
+        //Line 14 above for Account info model
+        public DbSet<LoanTypes> Loantypes { get; set; } 
+        //line 16 above for Loan model 
 
 
         public DbSet<LoanHistory> loanHistories { get; set; }
     }
+    
 }
 
 
