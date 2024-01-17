@@ -8,6 +8,9 @@ builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<ICardDetailsRepository, CardDetailsRepository>();
+builder.Services.AddScoped<IAccountInformationRepository, AccountInformationRepository>();
+builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
