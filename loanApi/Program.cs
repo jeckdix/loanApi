@@ -1,6 +1,7 @@
 using loanApi.Data;
 using loanApi.Services.AccountInformations;
 using loanApi.Services.CardDetails;
+using loanApi.Services.LoanHistories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<ICardDetailsRepository, CardDetailsRepository>();
 builder.Services.AddScoped<IAccountInformationRepository, AccountInformationRepository>();
+builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
