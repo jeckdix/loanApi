@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using loanApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace loanApi.Data
 {
@@ -8,7 +9,7 @@ namespace loanApi.Data
         public DataContext(DbContextOptions <DataContext> options) : base(options){}
 
 
-        //Line 10 above for user model
+       public DbSet<RegisterUsers> userRegister { get; set; }
 
         //Line 12 above for cards model
 
