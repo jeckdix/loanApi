@@ -2513,11 +2513,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Support\\Documents\\loanApi\\loanApi\\loanApi.csproj",
+      "projectUniqueName": "C:\\Users\\Support\\source\\repos\\loanApi\\loanApi\\loanApi.csproj",
       "projectName": "loanApi",
-      "projectPath": "C:\\Users\\Support\\Documents\\loanApi\\loanApi\\loanApi.csproj",
+      "projectPath": "C:\\Users\\Support\\source\\repos\\loanApi\\loanApi\\loanApi.csproj",
       "packagesPath": "C:\\Users\\Support\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Support\\Documents\\loanApi\\loanApi\\obj\\",
+      "outputPath": "C:\\Users\\Support\\source\\repos\\loanApi\\loanApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Support\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2592,7 +2592,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   },
