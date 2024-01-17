@@ -17,6 +17,9 @@ namespace loanApi.Data
         public DbSet<AccountInformation> accountInformations { get; set; }
         //line 16 above for Loan model 
 
+
+
+        public DbSet<LoanHistory> loanHistories { get; set; }
     }
 }
 
