@@ -1,5 +1,5 @@
 using loanApi.Data;
-<<<<<<< HEAD
+using loanApi.Services.LoanType;
 using loanApi.Services.OTP;
 using loanApi.Services.RegisterUser;
 using loanApi.Services.UserLogin;
@@ -12,19 +12,12 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-=======
-using loanApi.Services.LoanType;
-using Microsoft.EntityFrameworkCore;
->>>>>>> 998685dca910f9d2f2df4658b685712ff9b2537f
-
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IRegisterUser, RegisterService>();
+builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
 builder.Services.AddScoped<IUserLogin, LoginService>();
 builder.Services.AddScoped<IValidateOTP , ValidateOtpService>();
 builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

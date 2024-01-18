@@ -71,7 +71,7 @@ namespace loanApi.Controllers
             return Ok(new { Token = token });
         }
 
-        [HttpPost("validate"), Authorize(Roles = "User")]
+        [HttpPost("validate")]
         public async Task<IActionResult> ValidateOTP(ValidateOtpDto validateOTP)
         {
             if (validateOTP == null)
