@@ -154,5 +154,28 @@ namespace loanApi.Controllers
             }
         }
 
+        [HttpGet("calculate-loan-interest/{loanTypeId}")]
+        public async Task<IActionResult> CalculateLoanInterest(int loanTypeId)
+        {
+            try
+            {
+                // Assuming _loanTypeRepository has a method to get loan details by ID
+                LoanTypes loanType = await _loanTypeRepository.GetLoanTypeDetailsByIdAsync(loanTypeId);
+
+                if (loanType == null)
+                {
+                    return NotFound("No Loan Of Such Found");
+                }
+
+                decimal interest = LoanCalculator.CalculateInterest(loanType.MaxLoanAmount, loanType.InterestRate, int.Parse(loanType.Duration));
+                return Ok(new { InterestAmount = interest });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
     }
 }

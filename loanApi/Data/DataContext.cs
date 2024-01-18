@@ -9,20 +9,47 @@ namespace loanApi.Data
         public DataContext() : base()
         {
         }
-        public DataContext(DbContextOptions <DataContext> options) : base(options){}
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-       
 
-        //Line 10 above for user model
+
+
+        public DbSet<RegisterUsers> userRegister { get; set; }
+
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         //Line 12 above for cards model
-
+        public DbSet<CardDetail> cardDetails { get; set; }
         //Line 14 above for Account info model
-        public DbSet<LoanTypes> Loantypes { get; set; } 
+        public DbSet<AccountInformation> accountInformations { get; set; }
         //line 16 above for Loan model 
 
+        //Line 14 above for Account info model
+        public DbSet<LoanTypes> Loantypes { get; set; }
+        //line 16 above for Loan model 
+
+
+        public DbSet<LoanHistory> loanHistories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<RegisterUsers>()
+                .HasOne(u => u.Profile)
+                .WithOne(p => p.User)
+                .HasForeignKey<UserProfile>(p => p.UserId);
+
+            modelBuilder.Entity<UserProfile>()
+                .Property(e => e.Gender)
+                .HasConversion<string>();
+
+            modelBuilder.Entity<UserProfile>()
+                .Property(e => e.MaritalStatus)
+                .HasConversion<string>();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
-    
+
 }
 
 
