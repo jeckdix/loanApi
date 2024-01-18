@@ -22,5 +22,6 @@ namespace loanApi.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public UserProfile Profile { get; set; }
     }
 }
