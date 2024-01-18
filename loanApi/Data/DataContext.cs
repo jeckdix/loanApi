@@ -13,7 +13,8 @@ namespace loanApi.Data
 
 
 
-        //Line 10 above for user model
+
+        public DbSet<RegisterUsers> userRegister { get; set; }
 
         //Line 12 above for cards model
         public DbSet<CardDetail> cardDetails { get; set; }
