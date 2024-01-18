@@ -48,6 +48,13 @@ namespace loanApi.Services.RegisterUser
                     Password = registerUser.Password
                 };
 
+                var defaultProfile = new UserProfile()
+                {
+                    UserId = newUser.Id,
+                };
+
+                newUser.Profile = defaultProfile;
+
                 await SendOtpEmail(newUser.Email, newUser.OTP);
 
                 _dataContext.userRegister.Add(newUser);
