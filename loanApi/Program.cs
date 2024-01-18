@@ -3,6 +3,7 @@ using loanApi.Services.LoanType;
 using loanApi.Services.OTP;
 using loanApi.Services.RegisterUser;
 using loanApi.Services.UserLogin;
+using loanApi.Services.UserProfileService;
 using loanApi.Services.UserRegister;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,15 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<IRegisterUser, RegisterService>();
+builder.Services.AddScoped<IUserProfile, UserProfileService>();
 builder.Services.AddScoped<IUserLogin, LoginService>();
 builder.Services.AddScoped<IValidateOTP, ValidateOtpService>();
 builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
 // Add services to the container.
+
+//Add automapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

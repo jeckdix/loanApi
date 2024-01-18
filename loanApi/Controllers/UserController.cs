@@ -1,4 +1,5 @@
-﻿using loanApi.Dtos;
+﻿using AutoMapper;
+using loanApi.Dtos;
 using loanApi.Models;
 using loanApi.Services.OTP;
 using loanApi.Services.RegisterUser;
@@ -18,24 +19,26 @@ namespace loanApi.Controllers
         private readonly IRegisterUser _registerUserService;
         private readonly IUserLogin _userLoginService;
         private readonly IValidateOTP _validateOTP;
-        public UserController(IRegisterUser registerUser, IUserLogin userLogin, IValidateOTP validateOTP)
+        private readonly IMapper _mapper;
+
+        public UserController(IRegisterUser registerUser, IUserLogin userLogin, IValidateOTP validateOTP, IMapper mapper)
         {
             _registerUserService = registerUser;
             _userLoginService = userLogin;
             _validateOTP = validateOTP;
-        
+            _mapper = mapper;
         }
 
    
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterUsers registerUser)
+        public async Task<IActionResult> RegisterUser([FromBody] UserDto registerUser)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid input data");
             }
-
-            var registrationResult = await _registerUserService.RegisterUserAsync(registerUser);
+            var registerMap = _mapper.Map<RegisterUsers>(registerUser);
+            var registrationResult = await _registerUserService.RegisterUserAsync(registerMap);
 
             switch (registrationResult)
             {
