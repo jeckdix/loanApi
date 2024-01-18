@@ -1,5 +1,10 @@
-var builder = WebApplication.CreateBuilder(args);
+using loanApi.Data;
+using loanApi.Services.LoanType;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
 // Add services to the container.
 
 builder.Services.AddControllers();
