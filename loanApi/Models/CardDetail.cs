@@ -22,6 +22,6 @@ namespace loanApi.Models
         public int UserId { get; set; }
 
         // Navigation Property
-        //public User User { get; set; }
+        public User User { get; set; }
     }
 }
