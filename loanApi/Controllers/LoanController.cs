@@ -88,7 +88,8 @@ namespace loanApi.Controllers
                 }
 
                 decimal interest = LoanCalculator.CalculateInterest(mortgageLoan.MaxLoanAmount, mortgageLoan.InterestRate, int.Parse(mortgageLoan.Duration));
-                return Ok(new { InterestAmount = interest });
+                return Ok(new { InterestAmount = interest
+                });
             }
             catch (Exception ex)
             {
@@ -159,7 +160,7 @@ namespace loanApi.Controllers
         {
             try
             {
-                // Assuming _loanTypeRepository has a method to get loan details by ID
+             
                 LoanTypes loanType = await _loanTypeRepository.GetLoanTypeDetailsByIdAsync(loanTypeId);
 
                 if (loanType == null)
@@ -168,14 +169,21 @@ namespace loanApi.Controllers
                 }
 
                 decimal interest = LoanCalculator.CalculateInterest(loanType.MaxLoanAmount, loanType.InterestRate, int.Parse(loanType.Duration));
-                return Ok(new { InterestAmount = interest });
+                return Ok(new { 
+                    LoanTypeId = loanType.Id,
+                    InterestAmount = interest,
+                    MaxLoanAmount = loanType.MaxLoanAmount,
+                    MinLoanAmount = loanType.MinLoanAmount,
+                    InterestRate = loanType.InterestRate,
+                    Duration = loanType.Duration,
+               
+                });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
 
     }
 }
