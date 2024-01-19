@@ -9,5 +9,6 @@ namespace loanApi.Services.LoanType
         Task<LoanTypes> GetEmergencyLoanDetailsAsync();
         Task<LoanTypes> GetBusinessLoanDetailsAsync();
         Task<LoanTypes> GetMortgageLoanDetailsAsync();
+        Task<LoanTypes> GetLoanTypeDetailsByIdAsync(int loanTypeId);
     }
 }

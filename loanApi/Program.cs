@@ -1,16 +1,26 @@
 using loanApi.Data;
 using loanApi.Services.LoanType;
-using loanApi.Services.OTP;
-using loanApi.Services.RegisterUser;
-using loanApi.Services.UserLogin;
-using loanApi.Services.UserProfileService;
-using loanApi.Services.UserRegister;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+
+
+
+using loanApi.Services.OTP;
+using loanApi.Services.RegisterUser;
+using loanApi.Services.UserLogin;
+using loanApi.Services.UserProfileService;
+using loanApi.Services.UserRegister;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.IdentityModel.Tokens;
+//using Microsoft.OpenApi.Models;
+//using Swashbuckle.AspNetCore.Filters;
+//using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
