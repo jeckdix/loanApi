@@ -11,10 +11,10 @@
         public int UserId { get; set; }
 
         // LoanPackages reference
-        //public LoanPackages LoanPackage { get; set; }
+        public LoanTypes LoanPackage { get; set; }
 
         // User reference
-        //public User User { get; set; }
+        public User User { get; set; }
 
         // Collection of payments associated with this loan
         //public List<Payment> Payments { get; set; }
