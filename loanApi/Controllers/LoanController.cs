@@ -1,6 +1,7 @@
 ﻿using loanApi.Dtos;
 using loanApi.Helper;
 using loanApi.Models;
+using loanApi.Services.LoanHistories;
 using loanApi.Services.LoanType;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ namespace loanApi.Controllers
     public class LoanController : ControllerBase
     {
         private readonly ILoanTypeRepository _loanTypeRepository;
+        private readonly ILoanHistoryRepository _loanHistoryRepository;
 
-        public LoanController(ILoanTypeRepository loanTypeRepository)
+        public LoanController(ILoanTypeRepository loanTypeRepository, ILoanHistoryRepository loanHistoryRepository)
         {
             _loanTypeRepository = loanTypeRepository;
+            _loanHistoryRepository = loanHistoryRepository;
         }
 
         [HttpPost]
@@ -38,9 +41,9 @@ namespace loanApi.Controllers
         {
             try
             {
-                LoanTypes studentLoan = await  _loanTypeRepository.GetStudentLoanDetailsAsync();
+                LoanTypes studentLoan = await _loanTypeRepository.GetStudentLoanDetailsAsync();
 
-                if(studentLoan == null)
+                if (studentLoan == null)
                 {
                     return NotFound("No Loan Of Such Found");
                 }
@@ -88,7 +91,9 @@ namespace loanApi.Controllers
                 }
 
                 decimal interest = LoanCalculator.CalculateInterest(mortgageLoan.MaxLoanAmount, mortgageLoan.InterestRate, int.Parse(mortgageLoan.Duration));
-                return Ok(new { InterestAmount = interest
+                return Ok(new
+                {
+                    InterestAmount = interest
                 });
             }
             catch (Exception ex)
@@ -139,15 +144,16 @@ namespace loanApi.Controllers
                 }
 
                 decimal interest = LoanCalculator.CalculateInterest(businessLoan.MaxLoanAmount, businessLoan.InterestRate, int.Parse(businessLoan.Duration));
-                return Ok(new {
+                return Ok(new
+                {
                     InterestAmount = interest,
                     InterestRate = businessLoan.InterestRate,
                     MaxLoanDuration = businessLoan.Duration,
                     MinLoanAmount = businessLoan.MinLoanAmount,
                     MaxLoanAmount = businessLoan.MaxLoanAmount,
                     LoanName = businessLoan.LoanName
-     
-            });
+
+                });
             }
             catch (Exception ex)
             {
@@ -160,7 +166,7 @@ namespace loanApi.Controllers
         {
             try
             {
-             
+
                 LoanTypes loanType = await _loanTypeRepository.GetLoanTypeDetailsByIdAsync(loanTypeId);
 
                 if (loanType == null)
@@ -169,14 +175,15 @@ namespace loanApi.Controllers
                 }
 
                 decimal interest = LoanCalculator.CalculateInterest(loanType.MaxLoanAmount, loanType.InterestRate, int.Parse(loanType.Duration));
-                return Ok(new { 
+                return Ok(new
+                {
                     LoanTypeId = loanType.Id,
                     InterestAmount = interest,
                     MaxLoanAmount = loanType.MaxLoanAmount,
                     MinLoanAmount = loanType.MinLoanAmount,
                     InterestRate = loanType.InterestRate,
                     Duration = loanType.Duration,
-               
+
                 });
             }
             catch (Exception ex)
@@ -185,5 +192,59 @@ namespace loanApi.Controllers
             }
         }
 
+        [HttpPost("get-loan")]
+
+        public async Task<ActionResult> GetLoan([FromBody] LoanApplicationDto loanDetails)
+        {
+
+            bool verified = true;
+
+            decimal outstandingBalance = 2000;
+
+            decimal interest = 15;
+
+            int userId = 1;
+
+            if (!verified)
+            {
+                return Ok("Account KYC  not updated");
+            }
+
+            if (outstandingBalance > 0)
+            {
+                return Ok($"Sorry, you are not eligible to borrow. You have an outstanding balance of {outstandingBalance}");
+            }
+
+            if (outstandingBalance == 0)
+            {
+
+                LoanTypes loanType = await _loanTypeRepository.GetLoanTypeDetailsByIdAsync(loanDetails.loanTypeId);
+
+                if (loanType != null)
+                {
+
+                    LoanHistory loan = new LoanHistory()
+                    {
+                        LoanAmount = loanDetails.Amount,
+                        Balance = outstandingBalance + loanDetails.Amount,
+                        Status = "Unpaid",
+                        Interest = 2000,
+                        UserId = userId,
+                        LoanPackageId = loanDetails.loanTypeId
+                    };
+
+                    await _loanHistoryRepository.AddLoanHistory(loan);
+
+                    return Ok("Loan disbursed successfully");
+
+                }
+
+
+                return Ok();
+
+            }
+
+            return BadRequest();
+        }
     }
 }

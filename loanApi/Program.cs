@@ -15,6 +15,7 @@ using loanApi.Services.RegisterUser;
 using loanApi.Services.UserLogin;
 using loanApi.Services.UserProfileService;
 using loanApi.Services.UserRegister;
+using loanApi.Services.LoanHistories;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.EntityFrameworkCore;
 //using Microsoft.IdentityModel.Tokens;
@@ -24,12 +25,13 @@ using loanApi.Services.UserRegister;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IRegisterUser, RegisterService>();
 builder.Services.AddScoped<IUserProfile, UserProfileService>();
 builder.Services.AddScoped<IUserLogin, LoginService>();
 builder.Services.AddScoped<IValidateOTP, ValidateOtpService>();
-builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
+builder.Services.AddScoped<ILoanTypeRepository, LoanTypeRepository>();
+builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 // Add services to the container.
 
 //Add automapper
