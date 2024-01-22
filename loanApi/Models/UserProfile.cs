@@ -18,6 +18,7 @@
         public string NOKOccupation { get; set; } = string.Empty;
         public string NOKPhoneNumber { get; set; } = string.Empty;
         public string NOKAddress { get; set; } = string.Empty;
+        public bool ProfileUpdated { get; set; } = false;
 
         public int UserId { get; set; }
         public RegisterUsers User { get; set; }

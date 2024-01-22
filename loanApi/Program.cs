@@ -1,5 +1,10 @@
 using loanApi.Data;
 using loanApi.Services.LoanType;
+using loanApi.Services.OTP;
+using loanApi.Services.RegisterUser;
+using loanApi.Services.UserLogin;
+using loanApi.Services.UserProfileService;
+using loanApi.Services.UserRegister;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +15,11 @@ using System.Text;
 
 
 
-using loanApi.Services.OTP;
-using loanApi.Services.RegisterUser;
-using loanApi.Services.UserLogin;
-using loanApi.Services.UserProfileService;
-using loanApi.Services.UserRegister;
+//using loanApi.Services.OTP;
+//using loanApi.Services.RegisterUser;
+//using loanApi.Services.UserLogin;
+//using loanApi.Services.UserProfileService;
+//using loanApi.Services.UserRegister;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.EntityFrameworkCore;
 //using Microsoft.IdentityModel.Tokens;
