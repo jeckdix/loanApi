@@ -10,6 +10,7 @@ namespace loanApi.Services.LoanHistories
         Task<bool> UpdateLoanHistory(LoanHistory loanHistory);
         Task<bool> LoanHistoryExists(int userId);
         Task<IEnumerable<LoanHistory>> GetLoanHistoriesByUserId(int userId);
+        Task<LoanHistory> GetLoanHistoryByUserId(int userId);
         //Task<bool> CreateLoanHistoryForUser(int userId, LoanPackages selectedLoanPackage);
         //Task<bool> UpdateLoanHistoryFromPayment(int loanHistoryId, Payment payment);
         Task<bool> SaveAsync();

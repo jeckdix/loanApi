@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace loanApi.Services.UserRegister
 {
-    public interface IRegisterUser
+    public interface IUser
     {
-        Task<RegistrationResult> RegisterUserAsync(RegisterUsers registerUser);
+        Task<RegistrationResult> RegisterUserAsync(Models.User registerUser);
         string ErrorMessage { get; }
     }
 }

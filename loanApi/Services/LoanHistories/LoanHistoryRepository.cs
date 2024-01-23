@@ -27,6 +27,14 @@ namespace loanApi.Services.LoanHistories
             return await _dataContext.loanHistories.FirstOrDefaultAsync(loanHistory => loanHistory.Id == id);
         }
 
+        public async Task<LoanHistory> GetLoanHistoryByUserId(int userId)
+        {
+            return await _dataContext.loanHistories.Where(loanHistory => loanHistory.UserId == userId)
+                    .OrderByDescending(loanHistory => loanHistory.Date).FirstOrDefaultAsync();
+
+
+        }
+
         public async Task<bool> AddLoanHistory(LoanHistory loanHistory)
         {
             _dataContext.loanHistories.Add(loanHistory);
