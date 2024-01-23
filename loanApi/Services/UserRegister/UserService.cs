@@ -9,6 +9,7 @@ using System;
 using System.Net.Mail;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace loanApi.Services.RegisterUser
 {
@@ -17,11 +18,13 @@ namespace loanApi.Services.RegisterUser
         private readonly DataContext _dataContext;
         private readonly Random _random;
         private readonly ILogger<UserService> _logger;
+        private readonly IMemoryCache _cache;
 
-        public UserService(DataContext dataContext, ILogger<UserService> logger)
+        public UserService(DataContext dataContext, ILogger<UserService> logger, IMemoryCache cache)
         {
             _dataContext = dataContext;
             _logger = logger;
+            _cache = cache;
             _random = new Random();
         }
 
@@ -55,12 +58,11 @@ namespace loanApi.Services.RegisterUser
 
                 newUser.Profile = defaultProfile;
 
+                // create a temp cache
+                _cache.Set("tempUser", newUser);
+
                 await SendOtpEmail(newUser.Email, newUser.OTP);
 
-                _dataContext.userRegister.Add(newUser);
-                await _dataContext.SaveChangesAsync();
-
-              
 
                 _logger.LogInformation($"User registered: {newUser.Email}");
 

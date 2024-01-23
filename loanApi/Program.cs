@@ -29,6 +29,9 @@ builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 //Add automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
+//Add Memory cache
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
