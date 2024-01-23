@@ -31,30 +31,30 @@ namespace loanApi.Controllers
             return Ok(profile);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateProfile(UserProfilePostDto profileNew)
-        {
-            if (profileNew == null)
-                return BadRequest();
+        //[HttpPost]
+        //public async Task<IActionResult> CreateProfile(UserProfilePostDto profileNew)
+        //{
+        //    if (profileNew == null)
+        //        return BadRequest();
 
-            if(!ModelState.IsValid)
-                return BadRequest();
+        //    if(!ModelState.IsValid)
+        //        return BadRequest();
 
-            try
-            {
-                var profileMap = _mapper.Map<UserProfile>(profileNew);
-                var profileCreated = await _userProfileService.CreateProfile(profileMap);
+        //    try
+        //    {
+        //        var profileMap = _mapper.Map<UserProfile>(profileNew);
+        //        var profileCreated = await _userProfileService.CreateProfile(profileMap);
 
-                if (!profileCreated)
-                    return StatusCode(500, "Something went wrong when creating profile");
+        //        if (!profileCreated)
+        //            return StatusCode(500, "Something went wrong when creating profile");
 
-                return Ok("Profile created sucessfully");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Something went wrong when creating profile");
-            }
-        }
+        //        return Ok("Profile created sucessfully");
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500, "Something went wrong when creating profile");
+        //    }
+        //}
 
         [HttpPut("{profileId}")]
         public async Task<IActionResult> UpdateProfile(int profileId, UserProfilePostDto request)
@@ -69,13 +69,13 @@ namespace loanApi.Controllers
                 var profileUpdated = await _userProfileService.UpdateProfile(profileId, profileMap);
 
                 if (!profileUpdated)
-                    return StatusCode(500, "Something lrong happened when crateing the profile");
+                    return StatusCode(500, "Something wrong happened when creating the profile");
 
                 return Ok(request);
             }
             catch (Exception)
             {
-                return StatusCode(500, "Something wrong happened when creating the profile");
+                return StatusCode(500, "Something wrong happened");
             }
         }
     }

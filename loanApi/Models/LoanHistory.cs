@@ -7,6 +7,7 @@
         public decimal LoanAmount { get; set; }
         public decimal Balance { get; set; }
         public string Status { get; set; }
+        public decimal Interest {  get; set; }
         public int LoanPackageId { get; set; }
         public int UserId { get; set; }
 

@@ -16,12 +16,12 @@ namespace loanApi.Controllers
     public class UserController : ControllerBase
     {
 
-        private readonly IRegisterUser _registerUserService;
+        private readonly IUser _registerUserService;
         private readonly IUserLogin _userLoginService;
         private readonly IValidateOTP _validateOTP;
         private readonly IMapper _mapper;
 
-        public UserController(IRegisterUser registerUser, IUserLogin userLogin, IValidateOTP validateOTP, IMapper mapper)
+        public UserController(IUser registerUser, IUserLogin userLogin, IValidateOTP validateOTP, IMapper mapper)
         {
             _registerUserService = registerUser;
             _userLoginService = userLogin;
@@ -37,7 +37,7 @@ namespace loanApi.Controllers
             {
                 return BadRequest("Invalid input data");
             }
-            var registerMap = _mapper.Map<RegisterUsers>(registerUser);
+            var registerMap = _mapper.Map<User>(registerUser);
             var registrationResult = await _registerUserService.RegisterUserAsync(registerMap);
 
             switch (registrationResult)

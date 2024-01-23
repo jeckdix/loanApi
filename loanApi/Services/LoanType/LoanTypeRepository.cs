@@ -30,6 +30,11 @@ namespace loanApi.Services.LoanType
             return await _dataContext.Loantypes.FirstOrDefaultAsync(loan => loan.LoanName == "Emergency Loan");
         }
 
+        public async Task<LoanTypes> GetLoanTypeDetailsByIdAsync(int loanTypeId)
+        {
+            return await _dataContext.Loantypes.FindAsync(loanTypeId);
+        }
+
         public async Task<LoanTypes> GetMortgageLoanDetailsAsync()
         {
             return await _dataContext.Loantypes.FirstOrDefaultAsync(loan => loan.LoanName == "Mortgage Loan");
@@ -41,5 +46,8 @@ namespace loanApi.Services.LoanType
             return await _dataContext.Loantypes.FirstOrDefaultAsync(loan => loan.LoanName == "Student Loan ");
           
         }
+
    }
+
+    
 }

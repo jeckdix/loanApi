@@ -9,25 +9,28 @@ using System;
 using System.Net.Mail;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace loanApi.Services.RegisterUser
 {
-    public class RegisterService : IRegisterUser
+    public class UserService : IUser
     {
         private readonly DataContext _dataContext;
         private readonly Random _random;
-        private readonly ILogger<RegisterService> _logger;
+        private readonly ILogger<UserService> _logger;
+        private readonly IMemoryCache _cache;
 
-        public RegisterService(DataContext dataContext, ILogger<RegisterService> logger)
+        public UserService(DataContext dataContext, ILogger<UserService> logger, IMemoryCache cache)
         {
             _dataContext = dataContext;
             _logger = logger;
+            _cache = cache;
             _random = new Random();
         }
 
 
         public string ErrorMessage { get; private set; }
-        public async Task<RegistrationResult> RegisterUserAsync(RegisterUsers registerUser)
+        public async Task<RegistrationResult> RegisterUserAsync(Models.User registerUser)
         {
             try
             {
@@ -39,7 +42,7 @@ namespace loanApi.Services.RegisterUser
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
                 registerUser.Password = hashedPassword;
 
-                var newUser = new RegisterUsers
+                var newUser = new Models.User
                 {
                     FirstName = registerUser.FirstName,
                     LastName = registerUser.LastName,
@@ -55,12 +58,11 @@ namespace loanApi.Services.RegisterUser
 
                 newUser.Profile = defaultProfile;
 
+                // create a temp cache
+                _cache.Set("tempUser", newUser);
+
                 await SendOtpEmail(newUser.Email, newUser.OTP);
 
-                _dataContext.userRegister.Add(newUser);
-                await _dataContext.SaveChangesAsync();
-
-              
 
                 _logger.LogInformation($"User registered: {newUser.Email}");
 
