@@ -46,5 +46,8 @@ namespace loanApi.Services.LoanType
             return await _dataContext.Loantypes.FirstOrDefaultAsync(loan => loan.LoanName == "Student Loan ");
           
         }
+
    }
+
+    
 }

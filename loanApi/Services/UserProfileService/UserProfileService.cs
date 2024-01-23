@@ -1,4 +1,5 @@
-﻿using loanApi.Data;
+﻿using AutoMapper;
+using loanApi.Data;
 using loanApi.Helper;
 using loanApi.Models;
 
@@ -66,5 +67,7 @@ namespace loanApi.Services.UserProfileService
 
             return await Save();
         }
+
+
     }
 }

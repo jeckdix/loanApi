@@ -9,7 +9,7 @@ namespace loanApi.Helper
         public MappingProfiles()
         {
             // POST DTO
-            CreateMap<UserDto, RegisterUsers>();
+            CreateMap<UserDto, User>();
             CreateMap<UserProfilePostDto, UserProfile>();
         }
 

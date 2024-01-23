@@ -2,5 +2,6 @@
 {
     public interface IUser
     {
+        public Task<int?> GetUserByEmail(string email);
     }
 }

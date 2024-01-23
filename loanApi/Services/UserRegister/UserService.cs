@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace loanApi.Services.RegisterUser
 {
-    public class RegisterService : IRegisterUser
+    public class UserService : IUser
     {
         private readonly DataContext _dataContext;
         private readonly Random _random;
-        private readonly ILogger<RegisterService> _logger;
+        private readonly ILogger<UserService> _logger;
 
-        public RegisterService(DataContext dataContext, ILogger<RegisterService> logger)
+        public UserService(DataContext dataContext, ILogger<UserService> logger)
         {
             _dataContext = dataContext;
             _logger = logger;
@@ -27,7 +27,7 @@ namespace loanApi.Services.RegisterUser
 
 
         public string ErrorMessage { get; private set; }
-        public async Task<RegistrationResult> RegisterUserAsync(RegisterUsers registerUser)
+        public async Task<RegistrationResult> RegisterUserAsync(Models.User registerUser)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace loanApi.Services.RegisterUser
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
                 registerUser.Password = hashedPassword;
 
-                var newUser = new RegisterUsers
+                var newUser = new Models.User
                 {
                     FirstName = registerUser.FirstName,
                     LastName = registerUser.LastName,
