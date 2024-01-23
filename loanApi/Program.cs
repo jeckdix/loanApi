@@ -1,5 +1,10 @@
 using loanApi.Data;
 using loanApi.Services.LoanType;
+using loanApi.Services.OTP;
+using loanApi.Services.RegisterUser;
+using loanApi.Services.UserLogin;
+using loanApi.Services.UserProfileService;
+using loanApi.Services.UserRegister;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Microsoft.EntityFrameworkCore;
@@ -7,26 +12,13 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
-
-
-
-using loanApi.Services.OTP;
-using loanApi.Services.RegisterUser;
-using loanApi.Services.UserLogin;
-using loanApi.Services.UserProfileService;
-using loanApi.Services.UserRegister;
 using loanApi.Services.LoanHistories;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
-//using Microsoft.EntityFrameworkCore;
-//using Microsoft.IdentityModel.Tokens;
-//using Microsoft.OpenApi.Models;
-//using Swashbuckle.AspNetCore.Filters;
-//using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IRegisterUser, RegisterService>();
+builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IUserProfile, UserProfileService>();
 builder.Services.AddScoped<IUserLogin, LoginService>();
 builder.Services.AddScoped<IValidateOTP, ValidateOtpService>();
@@ -64,7 +56,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

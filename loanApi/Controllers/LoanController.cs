@@ -3,22 +3,34 @@ using loanApi.Helper;
 using loanApi.Models;
 using loanApi.Services.LoanHistories;
 using loanApi.Services.LoanType;
+using loanApi.Services.User;
+using loanApi.Services.UserProfileService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace loanApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LoanController : ControllerBase
     {
         private readonly ILoanTypeRepository _loanTypeRepository;
         private readonly ILoanHistoryRepository _loanHistoryRepository;
+        private readonly IUserProfile _userProfile;
+        private readonly IUser _user;
 
-        public LoanController(ILoanTypeRepository loanTypeRepository, ILoanHistoryRepository loanHistoryRepository)
+        public LoanController(ILoanTypeRepository loanTypeRepository, ILoanHistoryRepository loanHistoryRepository, IUserProfile userProfile, IUser user = null)
         {
             _loanTypeRepository = loanTypeRepository;
             _loanHistoryRepository = loanHistoryRepository;
+            _userProfile = userProfile;
+            _user = user;
         }
 
         [HttpPost]
@@ -192,50 +204,87 @@ namespace loanApi.Controllers
             }
         }
 
+
         [HttpPost("get-loan")]
 
         public async Task<ActionResult> GetLoan([FromBody] LoanApplicationDto loanDetails)
         {
+            string jwtToken = HttpContext.Request.Headers["Authorization"];
+         
+            //var jt = User.Claims;
 
-            bool verified = true;
+            var th = new JwtSecurityTokenHandler();
 
-            decimal outstandingBalance = 2000;
+            var rdth = th.ReadToken(jwtToken.Replace("Bearer ", "")) as JwtSecurityToken;
 
-            decimal interest = 15;
+            IEnumerable<Claim> claims = rdth.Claims;
 
-            int userId = 1;
+
+            var c = JsonConvert.SerializeObject(claims, Formatting.Indented);
+
+            var myclaims = claims.Where(x => x.Type == ClaimTypes.Role || x.Type == ClaimTypes.NameIdentifier);
+
+            var userId = int.Parse(claims.Where(x => x.Type == ClaimTypes.NameIdentifier).Select(x => x.Value).FirstOrDefault());
+
+           
+            
+            var user = await _userProfile.GetUserProfile(userId);
+
+
+            bool verified = user.ProfileUpdated;
+
+            var userDebtProfile = await _loanHistoryRepository.GetLoanHistoryByUserId(userId);
+
+            decimal debtOutstanding = 0; 
+
+            if ( userDebtProfile != null )
+            {
+                 debtOutstanding = userDebtProfile.Balance;
+            }
+
+
 
             if (!verified)
             {
                 return Ok("Account KYC  not updated");
             }
-
-            if (outstandingBalance > 0)
+            
+            if (debtOutstanding > 1000000)
             {
-                return Ok($"Sorry, you are not eligible to borrow. You have an outstanding balance of {outstandingBalance}");
+                return Ok($"Sorry, you are not eligible to borrow. You have an outstanding balance of {-debtOutstanding}");
             }
 
-            if (outstandingBalance == 0)
+
+
+            if (debtOutstanding < 1000000)
             {
 
                 LoanTypes loanType = await _loanTypeRepository.GetLoanTypeDetailsByIdAsync(loanDetails.loanTypeId);
 
+
                 if (loanType != null)
                 {
+                    if (loanDetails.Amount > loanType.MaxLoanAmount)
+                    {
+                        return Ok($"The maximum amount you can borrow is {loanType.MaxLoanAmount}");
+                    }
+                    
+                    
+                    decimal interest = LoanCalculator.CalculateInterest(loanDetails.Amount, loanType.InterestRate, int.Parse(loanType.Duration));
 
                     LoanHistory loan = new LoanHistory()
                     {
                         LoanAmount = loanDetails.Amount,
-                        Balance = outstandingBalance + loanDetails.Amount,
+                        Balance = debtOutstanding + loanDetails.Amount + interest,
                         Status = "Unpaid",
-                        Interest = 2000,
+                        Interest = interest,
                         UserId = userId,
                         LoanPackageId = loanDetails.loanTypeId
                     };
 
                     await _loanHistoryRepository.AddLoanHistory(loan);
 
-                    return Ok("Loan disbursed successfully");
+                    return Ok($"{loanDetails.Amount} disbursed successfully");
 
                 }
 
@@ -247,4 +296,5 @@ namespace loanApi.Controllers
             return BadRequest();
         }
     }
+
 }

@@ -14,7 +14,7 @@ namespace loanApi.Data
 
 
 
-        public DbSet<RegisterUsers> userRegister { get; set; }
+        public DbSet<User> userRegister { get; set; }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
 
@@ -33,7 +33,7 @@ namespace loanApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RegisterUsers>()
+            modelBuilder.Entity<User>()
                 .HasOne(u => u.Profile)
                 .WithOne(p => p.User)
                 .HasForeignKey<UserProfile>(p => p.UserId);
