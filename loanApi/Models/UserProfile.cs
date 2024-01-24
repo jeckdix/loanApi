@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public string BVN { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public DateTime DOB { get; set; }
+        public DateTime DOB { get; set; } 
         public Gender Gender { get; set; }
         public MaritalStatus MaritalStatus { get; set; }
         public string PersonalAddress { get; set; } = string.Empty;
@@ -22,6 +22,7 @@
 
         public int UserId { get; set; }
         public User User { get; set; }
+
     }
 
     public enum Gender

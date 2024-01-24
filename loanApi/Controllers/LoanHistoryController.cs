@@ -40,7 +40,7 @@ namespace loanApi.Controllers
         [HttpPost]
         public async Task<ActionResult> AddLoanHistory([FromBody] LoanHistory loanHistory)
         {
-            var success = await _loanHistoryRepository.AddLoanHistory(loanHistory);
+            var (success, loanId)  = await _loanHistoryRepository.AddLoanHistory(loanHistory);
 
             if (success)
             {
