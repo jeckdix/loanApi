@@ -24,7 +24,8 @@ namespace loanApi.Services.UserLogin
 
         public async Task<string> AuthenticateUserAsync(LoginDto loginuser)
         {
-            var NewLogin = await _context.userRegister.FirstOrDefaultAsync(u => u.Email == loginuser.Email);
+            var NewLogin = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginuser.Email);
+
             if (NewLogin == null)
             {
                 return null; // User not found
@@ -37,16 +38,22 @@ namespace loanApi.Services.UserLogin
             }
 
             // If credentials are valid, create and return a JWT token
-            return CreateToken(NewLogin);
+            return await CreateToken(NewLogin);
         }
 
 
-        private string CreateToken(RegisterUsers registerUsers)
+        private async Task<string> CreateToken(Models.User registerUsers)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == registerUsers.Email);
+
             List<Claim> claims = new List<Claim>
         {
+          
             new Claim(ClaimTypes.Email, registerUsers.Email),
-            new Claim(ClaimTypes.Role, "User")
+            new Claim(ClaimTypes.Role, "User"),
+             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+
+
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));

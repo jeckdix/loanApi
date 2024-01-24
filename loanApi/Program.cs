@@ -6,24 +6,37 @@ using loanApi.Services.UserLogin;
 using loanApi.Services.UserProfileService;
 using loanApi.Services.UserRegister;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using loanApi.Services.LoanHistories;
+using loanApi.Helper;
+using loanApi.Services.LoanPayments;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IRegisterUser, RegisterService>();
+builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IUser, UserService>();
 builder.Services.AddScoped<IUserProfile, UserProfileService>();
 builder.Services.AddScoped<IUserLogin, LoginService>();
 builder.Services.AddScoped<IValidateOTP, ValidateOtpService>();
-builder.Services.AddDbContext<DataContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<ILoanTypeRepository, LoanTypeRepository>();
+builder.Services.AddScoped<ILoanTypeRepository, LoanTypeRepository>();
+builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
 // Add services to the container.
 
 //Add automapper
 builder.Services.AddAutoMapper(typeof(Program));
+
+//Add Memory cache
+builder.Services.AddMemoryCache();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -52,7 +65,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

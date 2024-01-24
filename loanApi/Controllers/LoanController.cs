@@ -1,24 +1,42 @@
 ﻿using loanApi.Dtos;
 using loanApi.Helper;
 using loanApi.Models;
+using loanApi.Services.LoanHistories;
+using loanApi.Services.LoanPayments;
 using loanApi.Services.LoanType;
+using loanApi.Services.UserProfileService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace loanApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LoanController : ControllerBase
     {
         private readonly ILoanTypeRepository _loanTypeRepository;
+        private readonly ILoanHistoryRepository _loanHistoryRepository;
+        private readonly IUserProfile _userProfile;
+        private readonly ILoanService _loanService;
+        private readonly IPaymentRepository _paymentRepository;
 
-        public LoanController(ILoanTypeRepository loanTypeRepository)
+        public LoanController(ILoanTypeRepository loanTypeRepository, ILoanHistoryRepository loanHistoryRepository, IUserProfile userProfile, ILoanService loanService = null, IPaymentRepository paymentRepository = null)
         {
             _loanTypeRepository = loanTypeRepository;
+            _loanHistoryRepository = loanHistoryRepository;
+            _userProfile = userProfile;
+
+            _loanService = loanService;
+            _paymentRepository = paymentRepository;
         }
 
-        [HttpPost]
+        [HttpPost] 
         [Route("add")]
         public async Task<IActionResult> AddLoanAsync([FromBody] LoanTypes loanTypes)
         {
@@ -31,128 +49,64 @@ namespace loanApi.Controllers
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-        }
+        }     
 
-        [HttpGet("calculate-student-loan-interest")]
-        public async Task<IActionResult> CalculateStudentLoanInterest()
+        [HttpPost("request")]
+
+        public async Task<IActionResult> LoanRequest( LoanApplicationDto loanRequestDetails)
         {
-            try
-            {
-                LoanTypes studentLoan = await  _loanTypeRepository.GetStudentLoanDetailsAsync();
+            string jwtToken = HttpContext.Request.Headers["Authorization"];
+            int userId = Claims.GetCurrentUser(jwtToken);
+            
 
-                if(studentLoan == null)
-                {
-                    return NotFound("No Loan Of Such Found");
-                }
+            var   (isSuccess, message)  = await _loanService.CheckLoanEligibilityAsync(userId);
 
-                decimal interest = LoanCalculator.CalculateInterest(studentLoan.MaxLoanAmount, studentLoan.InterestRate, int.Parse(studentLoan.Duration));
-                return Ok(new { InterestAmount = interest });
-            }
-            catch (Exception ex)
+            if (!isSuccess)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return Ok(message);
             }
+
+           int loanId =  await _loanService.DisburseLoan(loanRequestDetails); 
+          
+
+            return Ok($"Loan Request submitted with loan ID : {loanId}.");
         }
 
-        [HttpGet("calculate-emergency-loan-interest")]
-        public async Task<IActionResult> CalculateEmergencyLoanInterest()
+        [HttpGet("status/{loanId}")]
+
+        public async Task <IActionResult> CheckLoanDisbursementStatus (int loanId)
         {
-            try
-            {
-                LoanTypes emergencyLoan = await _loanTypeRepository.GetEmergencyLoanDetailsAsync();
 
-                if (emergencyLoan == null)
-                {
-                    return NotFound("No Loan Of Such Found");
-                }
+            var loanStatus = await _loanService.LoanDisbursementStatus(loanId);    
+            
+            return Ok(loanStatus); 
 
-                decimal interest = LoanCalculator.CalculateInterest(emergencyLoan.MaxLoanAmount, emergencyLoan.InterestRate, int.Parse(emergencyLoan.Duration));
-                return Ok(new { InterestAmount = interest });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
         }
 
-        [HttpGet("calculate-mortgage-loan-interest")]
-        public async Task<IActionResult> CalculateMortgageLoanInterest()
+        [HttpPost("payment")]
+
+        public async Task <IActionResult> PayLoan (PaymentDto paymentDetails)
         {
-            try
-            {
-                LoanTypes mortgageLoan = await _loanTypeRepository.GetMortgageLoanDetailsAsync();
+            string jwtToken = HttpContext.Request.Headers["Authorization"];
+            int userId = Claims.GetCurrentUser(jwtToken);
 
-                if (mortgageLoan == null)
-                {
-                    return NotFound("No Loan Of Such Found");
-                }
-
-                decimal interest = LoanCalculator.CalculateInterest(mortgageLoan.MaxLoanAmount, mortgageLoan.InterestRate, int.Parse(mortgageLoan.Duration));
-                return Ok(new { InterestAmount = interest });
-            }
-            catch (Exception ex)
+            if (paymentDetails == null )
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return BadRequest();
             }
+
+            Payment payment = new Payment()
+            {
+                Amount = paymentDetails.Amount,
+                LoanId = paymentDetails.loanId,
+                UserId = userId,
+            };
+
+            var paymentId = await _paymentRepository.MakePaymentAsync(payment); 
+
+            return Ok($"{paymentDetails.Amount} deducted successfully. Payment reference Id: {paymentId}");
         }
-
-        //[HttpPost("calculate-mortgage-loan-interest")]
-        //public async Task<IActionResult> CalculateMortgageLoanInterest([FromBody] LoanCalculationRequest loanRequest)
-        //{
-        //    try
-        //    {
-        //        LoanTypes mortgageLoan = await _loanTypeRepository.GetMortgageLoanDetailsAsync();
-
-        //        if (mortgageLoan == null)
-        //        {
-        //            return NotFound("No Loan Of Such Found");
-        //        }
-
-        //        // Validate and parse the user-entered loan amount
-        //        if (!decimal.TryParse(loanRequest.UserEnteredLoanAmount, out decimal userEnteredLoanAmount))
-        //        {
-        //            return BadRequest("Invalid loan amount. Please enter a valid numeric value.");
-        //        }
-
-        //        // Calculate interest using the user-entered loan amount
-        //        decimal interest = LoanCalculator.CalculateInterest(userEnteredLoanAmount, mortgageLoan.InterestRate, int.Parse(mortgageLoan.Duration));
-        //        return Ok(new { InterestAmount = interest });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Internal server error: {ex.Message}");
-        //    }
-        //}
-
-
-        [HttpGet("calculate-business-loan-interest")]
-        public async Task<IActionResult> CalculateBusinessLoanInterest()
-        {
-            try
-            {
-                LoanTypes businessLoan = await _loanTypeRepository.GetBusinessLoanDetailsAsync();
-
-                if (businessLoan == null)
-                {
-                    return NotFound("No Loan Of Such Found");
-                }
-
-                decimal interest = LoanCalculator.CalculateInterest(businessLoan.MaxLoanAmount, businessLoan.InterestRate, int.Parse(businessLoan.Duration));
-                return Ok(new {
-                    InterestAmount = interest,
-                    InterestRate = businessLoan.InterestRate,
-                    MaxLoanDuration = businessLoan.Duration,
-                    MinLoanAmount = businessLoan.MinLoanAmount,
-                    MaxLoanAmount = businessLoan.MaxLoanAmount,
-                    LoanName = businessLoan.LoanName
-     
-            });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
+        
     }
+
 }

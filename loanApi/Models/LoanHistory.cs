@@ -4,9 +4,11 @@
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public decimal LoanAmount { get; set; }
-        public decimal Balance { get; set; }
-        public string Status { get; set; }
+        public decimal LoanAmount { get; set; } = 0;    
+        public decimal Balance { get; set; } = 0;
+        public string PaymentStatus { get; set; }
+        public decimal Interest { get; set; } = 0;
+        public bool Disbursed { get; set; } = false;
         public int LoanPackageId { get; set; }
         public int UserId { get; set; }
 
@@ -15,8 +17,7 @@
 
         // User reference
         public User User { get; set; }
-
-        // Collection of payments associated with this loan
-        //public List<Payment> Payments { get; set; }
+        
+        public List<Payment> Payments { get; set; }
     }
 }

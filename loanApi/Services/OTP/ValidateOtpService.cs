@@ -1,15 +1,19 @@
 ﻿using loanApi.Data;
+using loanApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace loanApi.Services.OTP
 {
     public class ValidateOtpService : IValidateOTP
     {
         private readonly DataContext _dataContext;
+        private readonly IMemoryCache _cache;
 
-        public ValidateOtpService(DataContext dataContext)
+        public ValidateOtpService(DataContext dataContext, IMemoryCache cache)
         {
-            _dataContext = dataContext;          
+            _dataContext = dataContext;
+            _cache = cache;
         }
 
         public async Task<OTPValidationResult> ValidateOTPAsync(string otp)
@@ -17,18 +21,31 @@ namespace loanApi.Services.OTP
             try
             {
                 // Find the corresponding entry in the database using the provided OTP
-                var user = await _dataContext.userRegister.FirstOrDefaultAsync(a => a.OTP == otp);
+                //var user = await _dataContext.userRegister.FirstOrDefaultAsync(a => a.OTP == otp);
 
-                if (user != null)
+                var userExists = _cache.TryGetValue("tempUser", out User newUser);
+
+                if (userExists)
                 {
-                    // Valid OTP
-                    return OTPValidationResult.Success;
+                    if (newUser.OTP == otp)
+                    {
+                        //create user from cache and save to db
+
+                        _dataContext.Users.Add(newUser);
+                        await _dataContext.SaveChangesAsync();
+
+                        // Valid OTP
+                        return OTPValidationResult.Success;
+                    }
+                    else
+                    {
+                        // Invalid OTP or admin not found
+                        return OTPValidationResult.InvalidOTP;
+                    }
                 }
                 else
-                {
-                    // Invalid OTP or admin not found
-                    return OTPValidationResult.InvalidOTP;
-                }
+                    throw new Exception("Something wrong happened when retrieving OTP");
+                
             }
             catch (Exception ex)
             {

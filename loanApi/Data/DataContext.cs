@@ -14,7 +14,7 @@ namespace loanApi.Data
 
 
 
-        public DbSet<RegisterUsers> userRegister { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public DbSet<UserProfile> UserProfiles { get; set; }
 
@@ -31,9 +31,11 @@ namespace loanApi.Data
 
         public DbSet<LoanHistory> loanHistories { get; set; }
 
+        public DbSet<Payment> Payments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RegisterUsers>()
+            modelBuilder.Entity<User>()
                 .HasOne(u => u.Profile)
                 .WithOne(p => p.User)
                 .HasForeignKey<UserProfile>(p => p.UserId);
@@ -45,6 +47,16 @@ namespace loanApi.Data
             modelBuilder.Entity<UserProfile>()
                 .Property(e => e.MaritalStatus)
                 .HasConversion<string>();
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.User)  
+                .WithMany(u => u.Payments)  
+                .HasForeignKey(p => p.UserId) 
+                .OnDelete(DeleteBehavior.Restrict); 
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.LoanHistory)   
+                .WithMany(lh => lh.Payments)   
+                .HasForeignKey(p => p.LoanId)  
+                .OnDelete(DeleteBehavior.Restrict);  
 
             base.OnModelCreating(modelBuilder);
         }

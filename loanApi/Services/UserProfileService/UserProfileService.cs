@@ -1,4 +1,6 @@
-﻿using loanApi.Data;
+﻿using AutoMapper;
+using loanApi.Data;
+using loanApi.Helper;
 using loanApi.Models;
 
 namespace loanApi.Services.UserProfileService
@@ -54,7 +56,18 @@ namespace loanApi.Services.UserProfileService
             profile.NOKPhoneNumber = request.NOKPhoneNumber;
             profile.NOKAddress = request.NOKAddress;
 
+            var bvnCheck = await ProfileUpdateCheckers.BVNCheckAsync(request.BVN);
+            var phoneCheck = await ProfileUpdateCheckers.PhoneNumberCheckAsync(request.PhoneNumber);
+            var salaryCheck = await ProfileUpdateCheckers.SalaryCheck(request.Salary);
+
+            if ( bvnCheck && phoneCheck && salaryCheck)
+            {
+                profile.ProfileUpdated = true;
+            }
+
             return await Save();
         }
+
+
     }
 }
