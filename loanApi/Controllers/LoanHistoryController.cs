@@ -39,36 +39,36 @@ namespace loanApi.Controllers
             return Ok(loanHistory);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AddLoanHistory([FromBody] LoanHistory loanHistory)
-        {
-            var (success, loanId)  = await _loanHistoryRepository.AddLoanHistory(loanHistory);
+        //[HttpPost]
+        //public async Task<ActionResult> AddLoanHistory([FromBody] LoanHistory loanHistory)
+        //{
+        //    var (success, loanId)  = await _loanHistoryRepository.AddLoanHistory(loanHistory);
 
-            if (success)
-            {
-                return CreatedAtAction(nameof(GetLoanHistoryById), new { id = loanHistory.Id }, loanHistory);
-            }
+        //    if (success)
+        //    {
+        //        return CreatedAtAction(nameof(GetLoanHistoryById), new { id = loanHistory.Id }, loanHistory);
+        //    }
 
-            return BadRequest("Failed to add loan history");
-        }
+        //    return BadRequest("Failed to add loan history");
+        //}
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateLoanHistory(int id, [FromBody] LoanHistory loanHistory)
-        {
-            if (id != loanHistory.Id)
-            {
-                return BadRequest("Mismatched IDs");
-            }
+        //[HttpPut("{id}")]
+        //public async Task<ActionResult> UpdateLoanHistory(int id, [FromBody] LoanHistory loanHistory)
+        //{
+        //    if (id != loanHistory.Id)
+        //    {
+        //        return BadRequest("Mismatched IDs");
+        //    }
 
-            var success = await _loanHistoryRepository.UpdateLoanHistory(loanHistory);
+        //    var success = await _loanHistoryRepository.UpdateLoanHistory(loanHistory);
 
-            if (success)
-            {
-                return NoContent();
-            }
+        //    if (success)
+        //    {
+        //        return NoContent();
+        //    }
 
-            return NotFound("Loan history not found");
-        }
+        //    return NotFound("Loan history not found");
+        //}
 
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<LoanHistory>>> GetLoanHistoriesByUserId(int userId)
