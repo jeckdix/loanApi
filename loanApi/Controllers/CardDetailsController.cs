@@ -2,10 +2,12 @@
 using loanApi.Models;
 using loanApi.Services.CardDetails;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace loanApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class CardDetailsController : ControllerBase
     {

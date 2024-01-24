@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using loanApi.Models;
 using loanApi.Services.LoanHistories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace loanApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class LoanHistoryController : ControllerBase
     {

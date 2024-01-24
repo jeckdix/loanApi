@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using loanApi.Models;
 using loanApi.Services.AccountInformations;
-using System.Threading.Tasks; // Import the namespace for Task
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization; // Import the namespace for Task
 
 namespace loanApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class AccountInformationController : ControllerBase
     {

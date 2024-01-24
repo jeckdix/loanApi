@@ -2,12 +2,14 @@
 using loanApi.Dtos;
 using loanApi.Models;
 using loanApi.Services.UserProfileService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace loanApi.Controllers
 {
     [Route("api/profile")]
+    [Authorize]
     [ApiController]
     public class UserProfileController : ControllerBase
     {   
