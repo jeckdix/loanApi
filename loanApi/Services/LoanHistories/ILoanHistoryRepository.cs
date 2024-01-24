@@ -6,7 +6,7 @@ namespace loanApi.Services.LoanHistories
     {
         Task<ICollection<LoanHistory>> GetLoanHistories();
         Task<LoanHistory> GetLoanHistoryById(int id);
-        Task<bool> AddLoanHistory(LoanHistory loanHistory);
+        Task<(bool, int)> AddLoanHistory(LoanHistory loanHistory);
         Task<bool> UpdateLoanHistory(LoanHistory loanHistory);
         Task<bool> LoanHistoryExists(int userId);
         Task<IEnumerable<LoanHistory>> GetLoanHistoriesByUserId(int userId);

@@ -13,6 +13,9 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using loanApi.Services.LoanHistories;
+using loanApi.Helper;
+using loanApi.Services.LoanPayments;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +27,9 @@ builder.Services.AddScoped<IUserLogin, LoginService>();
 builder.Services.AddScoped<IValidateOTP, ValidateOtpService>();
 builder.Services.AddScoped<ILoanTypeRepository, LoanTypeRepository>();
 builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
+builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
 // Add services to the container.
 
 //Add automapper

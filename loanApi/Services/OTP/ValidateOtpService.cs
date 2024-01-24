@@ -23,7 +23,7 @@ namespace loanApi.Services.OTP
                 // Find the corresponding entry in the database using the provided OTP
                 //var user = await _dataContext.userRegister.FirstOrDefaultAsync(a => a.OTP == otp);
 
-                var userExists = _cache.TryGetValue("tempUser", out RegisterUsers newUser);
+                var userExists = _cache.TryGetValue("tempUser", out User newUser);
 
                 if (userExists)
                 {
@@ -31,7 +31,7 @@ namespace loanApi.Services.OTP
                     {
                         //create user from cache and save to db
 
-                        _dataContext.userRegister.Add(newUser);
+                        _dataContext.Users.Add(newUser);
                         await _dataContext.SaveChangesAsync();
 
                         // Valid OTP
