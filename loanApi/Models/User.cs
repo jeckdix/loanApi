@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace loanApi.Models
@@ -23,5 +24,7 @@ namespace loanApi.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
         public UserProfile Profile { get; set; }
+
+        public List<Payment> Payments { get; set; }
     }
 }

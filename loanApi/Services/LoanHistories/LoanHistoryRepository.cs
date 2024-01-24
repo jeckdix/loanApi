@@ -35,10 +35,12 @@ namespace loanApi.Services.LoanHistories
 
         }
 
-        public async Task<bool> AddLoanHistory(LoanHistory loanHistory)
+        public async Task<(bool, int)> AddLoanHistory(LoanHistory loanHistory)
         {
             _dataContext.loanHistories.Add(loanHistory);
-            return await SaveAsync();
+             await SaveAsync();
+
+            return (true, loanHistory.Id); 
         }
 
         public async Task<bool> UpdateLoanHistory(LoanHistory loanHistory)
@@ -48,7 +50,7 @@ namespace loanApi.Services.LoanHistories
             {
                 // Update relevant properties
                 existingLoanHistory.Balance = loanHistory.Balance;
-                existingLoanHistory.Status = loanHistory.Status;
+                existingLoanHistory.PaymentStatus = loanHistory.PaymentStatus;
                 // Update other properties as needed
 
                 return await SaveAsync();

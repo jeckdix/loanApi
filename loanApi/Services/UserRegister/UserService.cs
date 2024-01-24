@@ -34,7 +34,7 @@ namespace loanApi.Services.RegisterUser
         {
             try
             {
-                if (await _dataContext.userRegister.AnyAsync(u => u.Email == registerUser.Email))
+                if (await _dataContext.Users.AnyAsync(u => u.Email == registerUser.Email))
                 {
                     return RegistrationResult.EmailAlreadyExists;
                 }
