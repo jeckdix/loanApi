@@ -15,6 +15,8 @@ using System.Text;
 using loanApi.Services.LoanHistories;
 using loanApi.Helper;
 using loanApi.Services.LoanPayments;
+using loanApi.Services.AccountInformations;
+using loanApi.Services.CardDetails;
 
 
 
@@ -29,6 +31,8 @@ builder.Services.AddScoped<ILoanTypeRepository, LoanTypeRepository>();
 builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IAccountInformationRepository, AccountInformationRepository>();
+builder.Services.AddScoped<ICardDetailsRepository, CardDetailsRepository>();
 
 // Add services to the container.
 
@@ -44,7 +48,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        Description = "Standard Authorization Header Using The Bearer Scheme(\"bearer {token}\")",
+        Description = "Standard Authorization Header Using The Bearer Scheme(\"Bearer {token}\")",
         In = ParameterLocation.Header,
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey

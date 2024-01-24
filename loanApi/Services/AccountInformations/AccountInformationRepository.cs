@@ -41,7 +41,7 @@ namespace loanApi.Services.AccountInformations
 
         public async Task<AccountInformation> GetAccountInformationById(int id)
         {
-            return await _dbContext.accountInformations.FirstOrDefaultAsync(a => a.Id == id);
+            return await _dbContext.accountInformations.FindAsync(id);
         }
 
         public async Task<ICollection<AccountInformation>> GetAccounts()
@@ -51,15 +51,17 @@ namespace loanApi.Services.AccountInformations
 
         public async Task<bool> Save()
         {
-            try
-            {
-                return await _dbContext.SaveChangesAsync() > 0;
-            }
-            catch (DbUpdateException)
-            {
-                // Handle DbUpdateException as needed
-                return false;
-            }
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
+            //try
+            //{
+            //    return await _dbContext.SaveChangesAsync() > 0;
+            //}
+            //catch (DbUpdateException)
+            //{
+            //    // Handle DbUpdateException as needed
+            //    return false;
+            //}
         }
 
         public async Task<bool> UpdateAccountInformation(AccountInformation accountInformation)
