@@ -11,6 +11,8 @@ namespace loanApi.Helper
             // POST DTO
             CreateMap<UserDto, User>();
             CreateMap<UserProfilePostDto, UserProfile>();
+            CreateMap<CardDto, CardDetail>();
+            CreateMap<AccountDto, AccountInformation>();
         }
 
     }

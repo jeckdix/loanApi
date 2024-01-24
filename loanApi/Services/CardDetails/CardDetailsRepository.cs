@@ -57,15 +57,17 @@ namespace loanApi.Services.CardDetails
 
         public async Task<bool> SaveAsync()
         {
-            try
-            {
-                return await _dbContext.SaveChangesAsync() > 0;
-            }
-            catch (DbUpdateException)
-            {
-                // Handle DbUpdateException as needed
-                return false;
-            }
+            var saved = await _dbContext.SaveChangesAsync();
+            return saved > 0;
+            //try
+            //{
+            //    return await _dbContext.SaveChangesAsync() > 0;
+            //}
+            //catch (DbUpdateException)
+            //{
+            //    // Handle DbUpdateException as needed
+            //    return false;
+            //}
         }
     }
 }
