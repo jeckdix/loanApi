@@ -30,6 +30,7 @@ builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 
+
 // Add services to the container.
 
 //Add automapper
@@ -71,6 +72,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

@@ -51,7 +51,10 @@ namespace loanApi.Services.UserLogin
           
             new Claim(ClaimTypes.Email, registerUsers.Email),
             new Claim(ClaimTypes.Role, "User"),
-             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.GivenName, registerUsers.FirstName), // Add this line for first name
+                  new Claim(ClaimTypes.Surname, registerUsers.LastName),
+
 
 
         };
