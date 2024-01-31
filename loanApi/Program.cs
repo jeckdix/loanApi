@@ -34,6 +34,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IAccountInformationRepository, AccountInformationRepository>();
 builder.Services.AddScoped<ICardDetailsRepository, CardDetailsRepository>();
 
+
 // Add services to the container.
 
 //Add automapper
@@ -75,6 +76,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

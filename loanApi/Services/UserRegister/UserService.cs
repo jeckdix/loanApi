@@ -96,7 +96,7 @@ namespace loanApi.Services.RegisterUser
                     {
                         smtp.Port = 587;
                         smtp.UseDefaultCredentials = false;
-                        smtp.Credentials = new NetworkCredential("lukemorolakemi@gmail.com", "qcyz ypqk pslv mlmt");
+                        smtp.Credentials = new NetworkCredential("lukemorolakemi@gmail.com", "vgcp lynv gfnk ulyx");
                         smtp.EnableSsl = true;
 
                         await smtp.SendMailAsync(mail);
